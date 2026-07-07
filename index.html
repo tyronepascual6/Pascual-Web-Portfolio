@@ -337,9 +337,15 @@
   <!-- HERO -->
   <section class="min-h-screen flex flex-col justify-center items-center text-center px-gutter pt-xl relative overflow-hidden" id="hero">
     <div class="max-w-[900px] z-10 w-full">
-      <div class="inline-flex items-center gap-2 px-md py-2 glass-surface rounded-full mb-md">
-        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-        <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 uppercase tracking-widest">Available for work</span>
+      <div class="flex flex-wrap items-center justify-center gap-sm mb-md">
+        <div class="inline-flex items-center gap-2 px-md py-2 glass-surface rounded-full">
+          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 uppercase tracking-widest">Available for work</span>
+        </div>
+        <div class="inline-flex items-center gap-2 px-md py-2 rounded-full" style="background:linear-gradient(135deg,rgba(250,204,21,0.15),rgba(234,179,8,0.25));border:1px solid rgba(234,179,8,0.4);">
+          <span class="material-symbols-outlined" style="font-size:14px;color:#ca8a04;">workspace_premium</span>
+          <span class="font-label-sm text-label-sm uppercase tracking-widest" style="color:#ca8a04;">Cum Laude · BSIT 2026</span>
+        </div>
       </div>
       <h1 class="font-display text-display mb-md text-primary dark:text-white break-words">Full-Stack Developer.<br/>Manila-based. Ships.</h1>
       <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 mb-lg max-w-[650px] mx-auto px-2">
@@ -597,11 +603,17 @@
               </div>
               <h3 class="font-headline-md text-headline-md dark:text-white">BS Information Technology</h3>
               <p class="font-body-md text-body-md text-secondary dark:text-secondary-fixed font-semibold">Universidad de Manila</p>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 mt-xs">Class of 2026 · ICT Track</p>
+              <div class="flex flex-wrap items-center gap-sm mt-xs">
+                <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Class of 2026 · ICT Track</p>
+                <span class="inline-flex items-center gap-1 px-sm py-[2px] rounded-full" style="background:linear-gradient(135deg,rgba(250,204,21,0.15),rgba(234,179,8,0.25));border:1px solid rgba(234,179,8,0.4);">
+                  <span class="material-symbols-outlined" style="font-size:11px;color:#ca8a04;">workspace_premium</span>
+                  <span class="font-label-sm text-label-sm" style="color:#ca8a04;font-size:10px;">Cum Laude</span>
+                </span>
+              </div>
             </div>
           </div>
           <ul class="space-y-sm text-on-surface-variant dark:text-gray-300 font-body-md text-body-md">
-            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Graduated with focus on full-stack web and mobile development</span></li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Graduated <strong class="text-primary dark:text-white">Cum Laude</strong> with focus on full-stack web and mobile development</span></li>
             <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Best in ICT — TLE Award, Batch 2020 (Junior High)</span></li>
             <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Capstone group leader and corresponding author published on Google Scholar</span></li>
           </ul>
@@ -643,8 +655,13 @@
             <p class="font-label-sm text-label-sm text-gray-200 uppercase mt-xs">Manila, Philippines</p>
           </div>
         </div>
-        <div class="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 w-32 h-32 md:w-48 md:h-48 glass-surface rounded-2xl items-center justify-center p-md text-center hidden sm:flex">
-          <p class="font-headline-md text-headline-md dark:text-white">BSIT<br/><span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Class of 2026</span></p>
+        <div class="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 w-32 h-32 md:w-48 md:h-48 glass-surface rounded-2xl items-center justify-center p-md text-center hidden sm:flex flex-col gap-xs">
+          <p class="font-headline-md text-headline-md dark:text-white">BSIT</p>
+          <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Class of 2026</p>
+          <div class="inline-flex items-center gap-1 px-sm py-1 rounded-full mt-xs" style="background:linear-gradient(135deg,rgba(250,204,21,0.2),rgba(234,179,8,0.3));border:1px solid rgba(234,179,8,0.5);">
+            <span class="material-symbols-outlined" style="font-size:12px;color:#ca8a04;">workspace_premium</span>
+            <span class="font-label-sm text-label-sm" style="color:#ca8a04;font-size:10px;letter-spacing:0.05em;">CUM LAUDE</span>
+          </div>
         </div>
       </div>
       <div class="section-reveal">
@@ -654,7 +671,13 @@
         <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 mb-lg">My work spans Flask APIs, React Native apps, Firebase integrations, PostgreSQL databases, Chrome extensions, and hands-on networking — all built and shipped without hand-holding. I care about clean code, practical UX, and solutions that actually run in production.</p>
         <div class="grid grid-cols-2 gap-md">
           <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">5+</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Projects Built</p></div>
-          <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">Best in ICT</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">TLE Award, Batch 2020</p></div>
+          <div>
+            <div class="flex items-center gap-1 mb-xs">
+              <span class="material-symbols-outlined" style="font-size:20px;color:#ca8a04;">workspace_premium</span>
+              <h4 class="font-headline-md text-headline-md" style="color:#ca8a04;">Cum Laude</h4>
+            </div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">BSIT · UdM 2026</p>
+          </div>
           <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">Published</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Google Scholar, 2025</p></div>
           <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">4</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Active Side Businesses</p></div>
         </div>
