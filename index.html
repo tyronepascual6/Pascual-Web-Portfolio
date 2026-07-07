@@ -2,20 +2,16 @@
 <html class="scroll-smooth" lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
 <title>Tyrone C. Pascual | Full-Stack Developer — Manila</title>
 
-<!-- =====================================================
-     SEO & Open Graph
-     Update og:url to your actual Vercel URL after deploy
-===================================================== -->
 <meta name="description" content="Full-stack developer from Manila — Flask, React Native, Firebase, PostgreSQL. IT graduate, capstone leader, Google Scholar author."/>
 <meta name="author" content="Tyrone C. Pascual"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Tyrone C. Pascual | Full-Stack Developer"/>
 <meta property="og:description" content="IT graduate from Manila building full-stack web and mobile apps — Flask, React Native, Firebase, PostgreSQL."/>
-<meta property="og:url" content="https://your-vercel-url.vercel.app"/>
-<meta property="og:image" content="https://your-vercel-url.vercel.app/og-preview.png"/>
+<meta property="og:url" content="https://https://pascual-web-portfolio.vercel.app/"/>
+<meta property="og:image" content="https://https://pascual-web-portfolio.vercel.app//og-preview.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Tyrone C. Pascual | Full-Stack Developer"/>
 <meta name="twitter:description" content="IT graduate from Manila building full-stack web and mobile apps."/>
@@ -85,12 +81,12 @@
         spacing: {
           xs: "4px",
           "container-max": "1200px",
-          xl: "80px",
-          lg: "48px",
+          xl: "clamp(40px, 8vw, 80px)",
+          lg: "clamp(28px, 6vw, 48px)",
           base: "8px",
           sm: "12px",
-          md: "24px",
-          gutter: "24px"
+          md: "clamp(16px, 4vw, 24px)",
+          gutter: "clamp(16px, 5vw, 24px)"
         },
         fontFamily: {
           "headline-lg": ["Inter"],
@@ -101,18 +97,28 @@
           "body-md": ["Inter"]
         },
         fontSize: {
-          "headline-lg": ["40px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
-          display: ["64px", { lineHeight: "1.1", letterSpacing: "-0.04em", fontWeight: "700" }],
+          "headline-lg": ["clamp(28px, 5vw, 40px)", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
+          display: ["clamp(36px, 9vw, 64px)", { lineHeight: "1.1", letterSpacing: "-0.03em", fontWeight: "700" }],
           "label-sm": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
-          "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
-          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
-          "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }]
+          "headline-md": ["clamp(19px, 3vw, 24px)", { lineHeight: "1.3", fontWeight: "600" }],
+          "body-lg": ["clamp(16px, 2.2vw, 18px)", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-md": ["15px", { lineHeight: "1.6", fontWeight: "400" }]
         }
       }
     }
   }
 </script>
 <style>
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
@@ -175,7 +181,6 @@
   .star-filled {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
   }
-  /* Mobile menu transition */
   #mobile-menu {
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
@@ -189,6 +194,94 @@
     transform: translateY(0);
     pointer-events: auto;
   }
+
+  /* ── Screenshot slideshow ───────────────────────────────────────
+     HOW THE THREE LAYERS WORK:
+
+     .screenshot-default  → always-visible photo shown at rest (opacity: 1)
+                            This is your first screenshot, shown before hover.
+                            It fades OUT when hover starts.
+
+     .screenshot-img      → two invisible layers used for the crossfade
+                            slideshow during hover. JS swaps between them.
+                            They fade IN on hover, fade OUT on leave.
+
+     .screenshot-dots     → dot indicators, appear on hover via CSS.
+  ─────────────────────────────────────────────────────────────── */
+  .screenshot-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* The always-visible default photo (shown before hover) */
+  .screenshot-default {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;                      /* VISIBLE at rest */
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* The two crossfade slideshow layers (hidden at rest, used during hover) */
+  .screenshot-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;                      /* HIDDEN at rest */
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Dot indicators — appear on hover (and always on touch devices) */
+  .screenshot-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .screenshot-wrapper:hover .screenshot-dots {
+    opacity: 1;
+  }
+  .screenshot-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .screenshot-dot.active {
+    background: rgba(255,255,255,1);
+    transform: scale(1.3);
+  }
+
+  /* ── Mobile-specific refinements ───────────────────────────── */
+  @media (hover: none) and (pointer: coarse) {
+    /* Disable custom cursor / hover-only affordances on touch devices */
+    .custom-cursor { display: none !important; }
+    .screenshot-dots { opacity: 1; }
+  }
+
+  @media (max-width: 767px) {
+    #hero { padding-top: 110px; min-height: calc(100vh - 40px); }
+    .animate-scroll { animation-duration: 18s; }
+    nav { padding-left: 12px; padding-right: 12px; }
+  }
+
+  @media (max-width: 400px) {
+    .font-display, .text-display { letter-spacing: -0.02em; }
+  }
 </style>
 </head>
 
@@ -196,18 +289,12 @@
 
 <div class="custom-cursor hidden md:block" id="cursor"></div>
 
-<!-- =========================================
-     NAV
-========================================= -->
-<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-[1200px] rounded-full border border-white/40 dark:border-white/10 bg-white/60 dark:bg-black/40 backdrop-blur-[20px] shadow-[0px_20px_40px_rgba(0,0,0,0.05)] flex justify-between items-center px-6 md:px-8 py-4 z-50 transition-all duration-300 ease-in-out hover:scale-[1.02]">
-
-  <!-- Logo + available dot -->
-  <div class="flex items-center gap-2">
-    <div class="font-headline-md text-headline-md tracking-tighter text-primary dark:text-white">TYRONE PASCUAL</div>
-    <span title="Available for work" class="w-2 h-2 rounded-full bg-green-500 animate-pulse hidden md:block"></span>
+<!-- NAV -->
+<nav class="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 w-[96%] sm:w-[95%] max-w-[1200px] rounded-full border border-white/40 dark:border-white/10 bg-white/60 dark:bg-black/40 backdrop-blur-[20px] shadow-[0px_20px_40px_rgba(0,0,0,0.05)] flex justify-between items-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 z-50 transition-all duration-300 ease-in-out md:hover:scale-[1.02]">
+  <div class="flex items-center gap-2 min-w-0">
+    <div class="font-headline-md text-headline-md tracking-tighter text-primary dark:text-white truncate">TYRONE PASCUAL</div>
+    <span title="Available for work" class="w-2 h-2 rounded-full bg-green-500 animate-pulse hidden md:block flex-shrink-0"></span>
   </div>
-
-  <!-- Desktop links -->
   <div class="hidden md:flex items-center gap-lg">
     <a class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 hover:text-primary dark:hover:text-white transition-colors duration-300" href="#projects">Projects</a>
     <a class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 hover:text-primary dark:hover:text-white transition-colors duration-300" href="#experience">Experience</a>
@@ -216,101 +303,76 @@
     <a class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 hover:text-primary dark:hover:text-white transition-colors duration-300" href="#testimonials">Testimonials</a>
     <a class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 hover:text-primary dark:hover:text-white transition-colors duration-300" href="#contact">Contact</a>
   </div>
-
-  <!-- Right side actions -->
-  <div class="flex items-center gap-2 md:gap-sm">
-    <!-- Theme toggle -->
+  <div class="flex items-center gap-1 sm:gap-2 md:gap-sm flex-shrink-0">
     <button class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-center" id="theme-toggle" aria-label="Toggle theme">
       <span class="material-symbols-outlined text-primary dark:text-white" id="theme-toggle-icon">dark_mode</span>
     </button>
-    <!-- Download CV — place Tyrone_Pascual_CV.pdf in your Vercel project root -->
     <a href="Tyrone_Pascual_CV.pdf" download class="hidden md:inline-flex items-center gap-1 border border-primary/20 dark:border-white/20 text-primary dark:text-white px-4 py-2 rounded-full font-label-sm text-label-sm transition-all duration-300 hover:bg-black/5 dark:hover:bg-white/10">
       <span class="material-symbols-outlined" style="font-size:14px;">download</span> CV
     </a>
-    <!-- GitHub -->
-    <a href="https://github.com/tyronepascual6" target="_blank" class="bg-primary dark:bg-white text-on-primary dark:text-black px-4 md:px-6 py-2 rounded-full font-label-sm text-label-sm transition-all duration-300 hover:opacity-80">GitHub</a>
-    <!-- Mobile hamburger -->
+    <a href="https://github.com/tyronepascual6" target="_blank" class="bg-primary dark:bg-white text-on-primary dark:text-black px-3 sm:px-4 md:px-6 py-2 rounded-full font-label-sm text-label-sm transition-all duration-300 hover:opacity-80 whitespace-nowrap">GitHub</a>
     <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-center" aria-label="Open menu">
       <span class="material-symbols-outlined text-primary dark:text-white" id="mobile-menu-icon">menu</span>
     </button>
   </div>
 </nav>
 
-<!-- Mobile menu dropdown (sits below nav pill) -->
-<div id="mobile-menu" class="menu-hidden fixed top-[88px] left-1/2 -translate-x-1/2 w-[95%] max-w-[1200px] rounded-2xl border border-white/40 dark:border-white/10 bg-white/90 dark:bg-black/90 backdrop-blur-[20px] shadow-xl z-40 md:hidden">
-  <div class="flex flex-col p-6 gap-md">
+<!-- Mobile menu -->
+<div id="mobile-menu" class="menu-hidden fixed top-[76px] sm:top-[88px] left-1/2 -translate-x-1/2 w-[92%] sm:w-[95%] max-w-[1200px] rounded-2xl border border-white/40 dark:border-white/10 bg-white/90 dark:bg-black/90 backdrop-blur-[20px] shadow-xl z-40 md:hidden max-h-[75vh] overflow-y-auto">
+  <div class="flex flex-col p-5 sm:p-6 gap-md">
     <a href="#projects" onclick="closeMobileMenu()" class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors py-2 border-b border-black/5 dark:border-white/5">Projects</a>
     <a href="#experience" onclick="closeMobileMenu()" class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors py-2 border-b border-black/5 dark:border-white/5">Experience</a>
     <a href="#about" onclick="closeMobileMenu()" class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors py-2 border-b border-black/5 dark:border-white/5">About</a>
     <a href="#stack" onclick="closeMobileMenu()" class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors py-2 border-b border-black/5 dark:border-white/5">Stack</a>
     <a href="#testimonials" onclick="closeMobileMenu()" class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors py-2 border-b border-black/5 dark:border-white/5">Testimonials</a>
     <a href="#contact" onclick="closeMobileMenu()" class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors py-2 border-b border-black/5 dark:border-white/5">Contact</a>
-    <!-- CV download in mobile menu -->
-    <a href="Tyrone_Pascual_CV.pdf" download onclick="closeMobileMenu()" class="inline-flex items-center justify-center gap-2 py-3 bg-primary dark:bg-white text-white dark:text-black rounded-xl font-label-sm text-label-sm transition-all hover:opacity-90">
+    <a href="/Tyrone_Pascual_CV.pdf" download onclick="closeMobileMenu()" class="inline-flex items-center justify-center gap-2 py-3 bg-primary dark:bg-white text-white dark:text-black rounded-xl font-label-sm text-label-sm transition-all hover:opacity-90">
       <span class="material-symbols-outlined" style="font-size:16px;">download</span> Download CV
     </a>
   </div>
 </div>
 
-<main>
+<main class="overflow-x-hidden">
 
-  <!-- =========================================
-       HERO
-  ========================================= -->
+  <!-- HERO -->
   <section class="min-h-screen flex flex-col justify-center items-center text-center px-gutter pt-xl relative overflow-hidden" id="hero">
-    <div class="max-w-[900px] z-10">
-
-      <!-- Badges row -->
-      <div class="flex flex-wrap items-center justify-center gap-sm mb-md">
-        <div class="inline-flex items-center gap-2 px-md py-2 glass-surface rounded-full">
-          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 uppercase tracking-widest">Available for work</span>
-        </div>
-        <div class="inline-flex items-center gap-2 px-md py-2 rounded-full" style="background:linear-gradient(135deg,rgba(250,204,21,0.15),rgba(234,179,8,0.25));border:1px solid rgba(234,179,8,0.4);">
-          <span class="material-symbols-outlined" style="font-size:14px;color:#ca8a04;">workspace_premium</span>
-          <span class="font-label-sm text-label-sm uppercase tracking-widest" style="color:#ca8a04;">Cum Laude · BSIT 2026</span>
-        </div>
+    <div class="max-w-[900px] z-10 w-full">
+      <div class="inline-flex items-center gap-2 px-md py-2 glass-surface rounded-full mb-md">
+        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-300 uppercase tracking-widest">Available for work</span>
       </div>
-
-      <h1 class="font-display text-display mb-md text-primary dark:text-white">Full-Stack Developer.<br/>Manila-based. Ships.</h1>
-      <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 mb-lg max-w-[650px] mx-auto">
+      <h1 class="font-display text-display mb-md text-primary dark:text-white break-words">Full-Stack Developer.<br/>Manila-based. Ships.</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 mb-lg max-w-[650px] mx-auto px-2">
         IT graduate building production-ready apps with Flask, React Native, Firebase, and PostgreSQL — from design to deployment.
       </p>
-
       <div class="flex flex-col gap-lg items-center">
-        <div class="flex flex-col sm:flex-row gap-md justify-center items-center flex-wrap">
-          <a class="px-xl py-4 bg-primary dark:bg-white text-on-primary dark:text-black rounded-full font-label-sm text-label-sm shadow-xl hover:scale-105 transition-transform duration-300" href="#projects">View Projects</a>
-          <a class="px-xl py-4 glass-surface rounded-full font-label-sm text-label-sm hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 dark:text-white" href="#contact">Get in Touch</a>
-          <!-- CV download CTA -->
-          <a href="Tyrone_Pascual_CV.pdf" download class="inline-flex items-center gap-2 px-xl py-4 glass-surface rounded-full font-label-sm text-label-sm hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 dark:text-white">
+        <div class="flex flex-col sm:flex-row gap-md justify-center items-center flex-wrap w-full sm:w-auto">
+          <a class="w-full sm:w-auto text-center px-xl py-4 bg-primary dark:bg-white text-on-primary dark:text-black rounded-full font-label-sm text-label-sm shadow-xl active:scale-95 md:hover:scale-105 transition-transform duration-300" href="#projects">View Projects</a>
+          <a class="w-full sm:w-auto text-center px-xl py-4 glass-surface rounded-full font-label-sm text-label-sm hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 dark:text-white" href="#contact">Get in Touch</a>
+          <a href="Tyrone_Pascual_CV.pdf" download class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-xl py-4 glass-surface rounded-full font-label-sm text-label-sm hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 dark:text-white">
             <span class="material-symbols-outlined" style="font-size:16px;">download</span> Download CV
           </a>
         </div>
-
-        <!-- Social icons -->
         <div class="flex items-center gap-md">
-          <a class="w-12 h-12 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:scale-110 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300" href="https://github.com/tyronepascual6" target="_blank" aria-label="GitHub">
+          <a class="w-12 h-12 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white md:hover:scale-110 active:scale-95 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300" href="https://github.com/tyronepascual6" target="_blank" aria-label="GitHub">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
           </a>
-          <a class="w-12 h-12 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:scale-110 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300" href="https://www.linkedin.com/in/tyrone-pascual-918059298/" target="_blank" aria-label="LinkedIn">
+          <a class="w-12 h-12 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white md:hover:scale-110 active:scale-95 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300" href="https://www.linkedin.com/in/tyrone-pascual-918059298/" target="_blank" aria-label="LinkedIn">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
-          <a class="w-12 h-12 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:scale-110 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300" href="mailto:bugstyrone@gmail.com" aria-label="Email">
+          <a class="w-12 h-12 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white md:hover:scale-110 active:scale-95 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300" href="mailto:bugstyrone@gmail.com" aria-label="Email">
             <span class="material-symbols-outlined" style="font-size:20px;">mail</span>
           </a>
         </div>
       </div>
     </div>
-    <div class="absolute top-1/4 -right-20 w-80 h-80 bg-secondary-fixed/30 dark:bg-secondary-container/10 blur-[100px] rounded-full pointer-events-none"></div>
-    <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-tertiary-fixed/20 dark:bg-tertiary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute top-1/4 -right-20 w-60 h-60 md:w-80 md:h-80 bg-secondary-fixed/30 dark:bg-secondary-container/10 blur-[100px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-1/4 -left-20 w-72 h-72 md:w-96 md:h-96 bg-tertiary-fixed/20 dark:bg-tertiary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
   </section>
 
-  <!-- =========================================
-       PROJECTS
-       5 projects: Row 1 (8+4), Row 2 (4+4+4)
-  ========================================= -->
+  <!-- PROJECTS -->
   <section class="max-w-[1200px] mx-auto px-gutter py-xl" id="projects">
-    <div class="section-reveal flex flex-col md:flex-row justify-between items-end mb-lg gap-md">
+    <div class="section-reveal flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
       <div>
         <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed uppercase tracking-[0.2em] mb-xs block">What I've Built</span>
         <h2 class="font-headline-lg text-headline-lg dark:text-white">Selected Projects</h2>
@@ -320,17 +382,34 @@
 
     <div class="grid grid-cols-1 md:grid-cols-12 gap-md">
 
-      <!-- ROW 1: MamaMoHiligMagApply (8) + Vitalis (4) -->
-      <!-- Each card is a clickable <a> → project.html?id=... renders full detail -->
+      <!-- ─────────────────────────────────────────────────────────
+           MamaMoHiligMagApply  (col-span-8)
 
-      <!-- MamaMoHiligMagApply -->
-      <a href="project.html?id=autoapply" class="section-reveal md:col-span-8 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
-        <div class="aspect-[16/9] overflow-hidden rounded-lg mb-md bg-gradient-to-br from-secondary-fixed/60 to-tertiary-fixed/40 flex items-center justify-center relative">
-          <div class="text-center px-8">
-            <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mb-4" style="font-size:64px;">extension</span>
-            <p class="font-headline-md text-headline-md text-primary dark:text-white">MamaMoHiligMagApply</p>
-          </div>
-          <span class="absolute top-3 right-3 px-sm py-1 bg-secondary text-white rounded-full text-[10px] font-bold uppercase tracking-wider">Latest</span>
+           HOW TO USE:
+           • screenshot-default src  = the photo shown BEFORE hover (first photo)
+           • data-screenshots        = ALL photos that cycle ON hover
+             (you can reuse the first one so hover starts from it)
+      ───────────────────────────────────────────────────────────── -->
+      <a href="project.html?id=autoapply" class="section-reveal md:col-span-8 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl md:hover:-translate-y-1 cursor-pointer">
+        <div class="screenshot-wrapper aspect-[16/9] rounded-lg mb-md bg-gradient-to-br from-secondary-fixed/60 to-tertiary-fixed/40"
+             data-screenshots='[
+               "screenshots/autoapply-1.png",
+               "screenshots/autoapply-2.png",
+               "screenshots/autoapply-3.jpg"
+             ]'>
+
+          <!-- DEFAULT PHOTO — shown at rest, fades out on hover -->
+          <img class="screenshot-default" src="screenshots/autoapply-1.png" alt="AutoApply preview" loading="lazy" />
+
+          <!-- SLIDESHOW LAYERS — invisible at rest, used during hover -->
+          <img class="screenshot-img" src="" alt="AutoApply screenshot" />
+          <img class="screenshot-img" src="" alt="AutoApply screenshot" />
+
+          <!-- Dot indicators -->
+          <div class="screenshot-dots"></div>
+
+          <!-- Badge on top of everything -->
+          <span class="absolute top-3 right-3 px-sm py-1 bg-secondary text-white rounded-full text-[10px] font-bold uppercase tracking-wider z-10">Latest</span>
         </div>
         <div class="px-sm pb-sm">
           <div class="flex flex-wrap gap-sm mb-xs">
@@ -340,22 +419,31 @@
             <span class="px-sm py-1 glass-surface rounded-full text-[10px] font-bold uppercase tracking-wider text-secondary dark:text-secondary-fixed">Vanilla JS</span>
           </div>
           <h3 class="font-headline-md text-headline-md mb-xs dark:text-white">AI-Powered Job Application Autofiller</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400">Chrome extension that auto-fills job application forms using AI-parsed CV data. Three-layer form-filling intelligence system, CV parsing via Groq's <code class="text-xs bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded">llama-3.3-70b-versatile</code>, confidence scoring, and MutationObserver support for dynamic forms.</p>
+          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400">Chrome extension that auto-fills job application forms using AI-parsed CV data. Three-layer form-filling intelligence system, CV parsing via Groq's <code class="text-xs bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded break-words">llama-3.3-70b-versatile</code>, confidence scoring, and MutationObserver support for dynamic forms.</p>
           <span class="inline-flex items-center gap-1 mt-sm font-label-sm text-label-sm text-secondary dark:text-secondary-fixed group-hover:underline">
             View Details <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
           </span>
         </div>
       </a>
 
-      <!-- Vitalis — Capstone + Published -->
-      <a href="project.html?id=vitalis" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
-        <div class="aspect-[4/5] overflow-hidden rounded-lg mb-md bg-gradient-to-br from-tertiary-fixed/70 to-secondary-fixed/40 flex items-center justify-center relative">
-          <div class="text-center px-4">
-            <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mb-4" style="font-size:56px;">health_and_safety</span>
-            <p class="font-headline-md text-headline-md text-primary dark:text-white">Vitalis</p>
-          </div>
-          <span class="absolute top-3 left-3 px-sm py-1 bg-secondary text-white rounded-full text-[10px] font-bold uppercase tracking-wider">Capstone</span>
-          <span class="absolute top-3 right-3 px-sm py-1 bg-black/60 dark:bg-white/20 text-white rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+      <!-- ─────────────────────────────────────────────────────────
+           Vitalis  (col-span-4)
+      ───────────────────────────────────────────────────────────── -->
+      <a href="project.html?id=vitalis" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl md:hover:-translate-y-1 cursor-pointer">
+        <div class="screenshot-wrapper aspect-[4/5] rounded-lg mb-md bg-gradient-to-br from-tertiary-fixed/70 to-secondary-fixed/40"
+             data-screenshots='[
+               "screenshots/vitalis-1.jpg",
+               "screenshots/vitalis-2.jpg",
+               "screenshots/vitalis-3.jpg"
+             ]'>
+
+          <img class="screenshot-default" src="screenshots/vitalis-1.jpg" alt="Vitalis preview" loading="lazy" />
+          <img class="screenshot-img" src="" alt="Vitalis screenshot" />
+          <img class="screenshot-img" src="" alt="Vitalis screenshot" />
+          <div class="screenshot-dots"></div>
+
+          <span class="absolute top-3 left-3 px-sm py-1 bg-secondary text-white rounded-full text-[10px] font-bold uppercase tracking-wider z-10">Capstone</span>
+          <span class="absolute top-3 right-3 px-sm py-1 bg-black/60 dark:bg-white/20 text-white rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 z-10">
             <span class="material-symbols-outlined" style="font-size:11px;">school</span> Published
           </span>
         </div>
@@ -373,15 +461,21 @@
         </div>
       </a>
 
-      <!-- ROW 2: Rico Gym (4) + Mobile Portfolio (4) + Movie App (4) -->
+      <!-- ─────────────────────────────────────────────────────────
+           Rico Gym  (col-span-4)
+      ───────────────────────────────────────────────────────────── -->
+      <a href="project.html?id=gym" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl md:hover:-translate-y-1 cursor-pointer">
+        <div class="screenshot-wrapper aspect-[4/3] rounded-lg mb-md bg-gradient-to-br from-tertiary-fixed/60 to-secondary-fixed/30"
+             data-screenshots='[
+               "screenshots/gym-1.jpg",
+               "screenshots/gym-2.jpg",
+               "screenshots/gym-3.jpg"
+             ]'>
 
-      <!-- Rico Gym -->
-      <a href="project.html?id=gym" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
-        <div class="aspect-[4/3] overflow-hidden rounded-lg mb-md bg-gradient-to-br from-tertiary-fixed/60 to-secondary-fixed/30 flex items-center justify-center">
-          <div class="text-center px-4">
-            <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mb-4" style="font-size:56px;">fitness_center</span>
-            <p class="font-headline-md text-headline-md text-primary dark:text-white">Gym Management System</p>
-          </div>
+          <img class="screenshot-default" src="screenshots/gym-1.jpg" alt="Gym system preview" loading="lazy" />
+          <img class="screenshot-img" src="" alt="Gym system screenshot" />
+          <img class="screenshot-img" src="" alt="Gym system screenshot" />
+          <div class="screenshot-dots"></div>
         </div>
         <div class="px-sm pb-sm">
           <div class="flex flex-wrap gap-sm mb-xs">
@@ -397,13 +491,21 @@
         </div>
       </a>
 
-      <!-- Mobile Portfolio -->
-      <a href="project.html?id=portfolio" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
-        <div class="aspect-[4/3] overflow-hidden rounded-lg mb-md bg-gradient-to-br from-secondary-fixed/40 to-surface-container-high/80 flex items-center justify-center">
-          <div class="text-center px-4">
-            <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mb-4" style="font-size:56px;">smartphone</span>
-            <p class="font-headline-md text-headline-md text-primary dark:text-white">Mobile Portfolio App</p>
-          </div>
+      <!-- ─────────────────────────────────────────────────────────
+           Mobile Portfolio  (col-span-4)
+      ───────────────────────────────────────────────────────────── -->
+      <a href="project.html?id=portfolio" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl md:hover:-translate-y-1 cursor-pointer">
+        <div class="screenshot-wrapper aspect-[4/3] rounded-lg mb-md bg-gradient-to-br from-secondary-fixed/40 to-surface-container-high/80"
+             data-screenshots='[
+               "screenshots/portfolio-1.jpg",
+               "screenshots/portfolio-2.jpg",
+               "screenshots/portfolio-3.jpg"
+             ]'>
+
+          <img class="screenshot-default" src="screenshots/portfolio-1.jpg" alt="Mobile portfolio preview" loading="lazy" />
+          <img class="screenshot-img" src="" alt="Mobile portfolio screenshot" />
+          <img class="screenshot-img" src="" alt="Mobile portfolio screenshot" />
+          <div class="screenshot-dots"></div>
         </div>
         <div class="px-sm pb-sm">
           <div class="flex flex-wrap gap-sm mb-xs">
@@ -419,14 +521,23 @@
         </div>
       </a>
 
-      <!-- Movie App -->
-      <a href="project.html?id=movieapp" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
-        <div class="aspect-[4/3] overflow-hidden rounded-lg mb-md bg-gradient-to-br from-secondary-fixed/30 to-tertiary-fixed/50 flex items-center justify-center relative">
-          <div class="text-center px-4">
-            <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mb-4" style="font-size:56px;">movie</span>
-            <p class="font-headline-md text-headline-md text-primary dark:text-white">Movie Mobile App</p>
-          </div>
-          <span class="absolute top-3 left-3 px-sm py-1 bg-black/40 dark:bg-white/10 text-white rounded-full text-[10px] font-bold uppercase tracking-wider">First RN Project</span>
+      <!-- ─────────────────────────────────────────────────────────
+           Movie App  (col-span-4)
+      ───────────────────────────────────────────────────────────── -->
+      <a href="project.html?id=movieapp" class="section-reveal md:col-span-4 group relative overflow-hidden rounded-xl glass-surface p-base block transition-all duration-500 hover:shadow-2xl md:hover:-translate-y-1 cursor-pointer">
+        <div class="screenshot-wrapper aspect-[4/3] rounded-lg mb-md bg-gradient-to-br from-secondary-fixed/30 to-tertiary-fixed/50"
+             data-screenshots='[
+               "screenshots/movie-1.jpg",
+               "screenshots/movie-2.jpg",
+               "screenshots/movie-3.jpg"
+             ]'>
+
+          <img class="screenshot-default" src="screenshots/movie-1.jpg" alt="Movie app preview" loading="lazy" />
+          <img class="screenshot-img" src="" alt="Movie app screenshot" />
+          <img class="screenshot-img" src="" alt="Movie app screenshot" />
+          <div class="screenshot-dots"></div>
+
+          <span class="absolute top-3 left-3 px-sm py-1 bg-black/40 dark:bg-white/10 text-white rounded-full text-[10px] font-bold uppercase tracking-wider z-10">First RN Project</span>
         </div>
         <div class="px-sm pb-sm">
           <div class="flex flex-wrap gap-sm mb-xs">
@@ -445,9 +556,7 @@
     </div>
   </section>
 
-  <!-- =========================================
-       EXPERIENCE
-  ========================================= -->
+  <!-- EXPERIENCE -->
   <section class="py-xl bg-white/10 dark:bg-black/20 backdrop-blur-sm border-y border-white/20 dark:border-white/5" id="experience">
     <div class="max-w-[1200px] mx-auto px-gutter">
       <div class="section-reveal mb-lg">
@@ -455,14 +564,12 @@
         <h2 class="font-headline-lg text-headline-lg dark:text-white">Experience</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-
-        <!-- Internship -->
         <div class="section-reveal glass-surface rounded-xl p-md transition-all duration-300 hover:shadow-xl">
           <div class="flex items-start gap-md mb-md">
             <div class="w-14 h-14 rounded-xl glass-surface flex items-center justify-center flex-shrink-0">
               <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed" style="font-size:28px;">groups</span>
             </div>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div class="flex items-center gap-sm flex-wrap mb-xs">
                 <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider">Internship</span>
                 <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">2026</span>
@@ -473,66 +580,38 @@
             </div>
           </div>
           <ul class="space-y-sm text-on-surface-variant dark:text-gray-300 font-body-md text-body-md">
-            <li class="flex items-start gap-sm">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span>
-              <span>Led and evaluated a team of IT interns across multiple departments</span>
-            </li>
-            <li class="flex items-start gap-sm">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span>
-              <span>Handled intern onboarding, attendance monitoring, and performance evaluations</span>
-            </li>
-            <li class="flex items-start gap-sm">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span>
-              <span>Coordinated platform listing management and inter-team communication</span>
-            </li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Led and evaluated a team of IT interns across multiple departments</span></li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Handled intern onboarding, attendance monitoring, and performance evaluations</span></li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Coordinated platform listing management and inter-team communication</span></li>
           </ul>
         </div>
-
-        <!-- Education -->
         <div class="section-reveal glass-surface rounded-xl p-md transition-all duration-300 hover:shadow-xl">
           <div class="flex items-start gap-md mb-md">
             <div class="w-14 h-14 rounded-xl glass-surface flex items-center justify-center flex-shrink-0">
               <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed" style="font-size:28px;">school</span>
             </div>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div class="flex items-center gap-sm flex-wrap mb-xs">
                 <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider">Education</span>
                 <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">2022 – 2026</span>
               </div>
               <h3 class="font-headline-md text-headline-md dark:text-white">BS Information Technology</h3>
               <p class="font-body-md text-body-md text-secondary dark:text-secondary-fixed font-semibold">Universidad de Manila</p>
-              <div class="flex flex-wrap items-center gap-sm mt-xs">
-                <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Class of 2026 · ICT Track</p>
-                <span class="inline-flex items-center gap-1 px-sm py-[2px] rounded-full" style="background:linear-gradient(135deg,rgba(250,204,21,0.15),rgba(234,179,8,0.25));border:1px solid rgba(234,179,8,0.4);">
-                  <span class="material-symbols-outlined" style="font-size:11px;color:#ca8a04;">workspace_premium</span>
-                  <span class="font-label-sm text-label-sm" style="color:#ca8a04;font-size:10px;">Cum Laude</span>
-                </span>
-              </div>
+              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 mt-xs">Class of 2026 · ICT Track</p>
             </div>
           </div>
           <ul class="space-y-sm text-on-surface-variant dark:text-gray-300 font-body-md text-body-md">
-            <li class="flex items-start gap-sm">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span>
-              <span>Graduated <strong class="text-primary dark:text-white">Cum Laude</strong> with focus on full-stack web and mobile development</span>
-            </li>
-            <li class="flex items-start gap-sm">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span>
-              <span>Best in ICT — TLE Award, Batch 2020 (Junior High)</span>
-            </li>
-            <li class="flex items-start gap-sm">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span>
-              <span>Capstone group leader and corresponding author published on Google Scholar</span>
-            </li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Graduated with focus on full-stack web and mobile development</span></li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Best in ICT — TLE Award, Batch 2020 (Junior High)</span></li>
+            <li class="flex items-start gap-sm"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed mt-1 flex-shrink-0" style="font-size:16px;">check_circle</span><span>Capstone group leader and corresponding author published on Google Scholar</span></li>
           </ul>
         </div>
-
-        <!-- Side Business -->
         <div class="section-reveal md:col-span-2 glass-surface rounded-xl p-md transition-all duration-300 hover:shadow-xl">
           <div class="flex items-start gap-md mb-md">
             <div class="w-14 h-14 rounded-xl glass-surface flex items-center justify-center flex-shrink-0">
               <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed" style="font-size:28px;">storefront</span>
             </div>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div class="flex items-center gap-sm flex-wrap mb-xs">
                 <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider">Entrepreneur</span>
                 <span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Ongoing</span>
@@ -542,94 +621,48 @@
             </div>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
-            <div class="glass-surface rounded-lg p-sm text-center">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">wifi</span>
-              <p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">Piso WiFi</p>
-              <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">2 units managed</p>
-            </div>
-            <div class="glass-surface rounded-lg p-sm text-center">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">payments</span>
-              <p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">GCash</p>
-              <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">Cash-in / Cash-out</p>
-            </div>
-            <div class="glass-surface rounded-lg p-sm text-center">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">restaurant</span>
-              <p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">Siomai</p>
-              <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">Food stall</p>
-            </div>
-            <div class="glass-surface rounded-lg p-sm text-center">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">store</span>
-              <p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">Sari-Sari Store</p>
-              <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">Neighborhood retail</p>
-            </div>
+            <div class="glass-surface rounded-lg p-sm text-center"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">wifi</span><p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">Piso WiFi</p><p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">2 units managed</p></div>
+            <div class="glass-surface rounded-lg p-sm text-center"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">payments</span><p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">GCash</p><p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">Cash-in / Cash-out</p></div>
+            <div class="glass-surface rounded-lg p-sm text-center"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">restaurant</span><p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">Siomai</p><p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">Food stall</p></div>
+            <div class="glass-surface rounded-lg p-sm text-center"><span class="material-symbols-outlined text-secondary dark:text-secondary-fixed block mb-xs" style="font-size:28px;">store</span><p class="font-label-sm text-label-sm text-primary dark:text-white uppercase">Sari-Sari Store</p><p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-sm">Neighborhood retail</p></div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- =========================================
-       ABOUT
-  ========================================= -->
+  <!-- ABOUT -->
   <section class="max-w-[1200px] mx-auto px-gutter py-xl" id="about">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
       <div class="section-reveal relative">
-        <div class="w-full aspect-square rounded-2xl overflow-hidden glass-surface p-4 flex items-center justify-center">
-          <div class="text-center">
-            <div class="w-40 h-40 rounded-full glass-surface flex items-center justify-center mx-auto mb-6">
-              <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed" style="font-size:80px;">person</span>
-            </div>
-            <p class="font-headline-md text-headline-md dark:text-white">Tyrone C. Pascual</p>
-            <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase mt-xs">Manila, Philippines</p>
+        <!-- Portrait card: full-bleed photo, no inner padding/frame, name overlaid at bottom -->
+        <div class="w-full aspect-square rounded-2xl overflow-hidden glass-surface relative">
+          <img src="screenshots/pascual-1.JPG" alt="Tyrone C. Pascual" class="w-full h-full object-cover" loading="lazy" />
+          <div class="absolute inset-x-0 bottom-0 px-md py-md bg-gradient-to-t from-black/75 via-black/30 to-transparent">
+            <p class="font-headline-md text-headline-md text-white">Tyrone C. Pascual</p>
+            <p class="font-label-sm text-label-sm text-gray-200 uppercase mt-xs">Manila, Philippines</p>
           </div>
         </div>
-        <div class="absolute -bottom-10 -right-10 w-52 h-52 glass-surface rounded-2xl items-center justify-center p-md text-center hidden lg:flex flex-col gap-xs">
-          <p class="font-headline-md text-headline-md dark:text-white">BSIT</p>
-          <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Class of 2026</p>
-          <div class="inline-flex items-center gap-1 px-sm py-1 rounded-full mt-xs" style="background:linear-gradient(135deg,rgba(250,204,21,0.2),rgba(234,179,8,0.3));border:1px solid rgba(234,179,8,0.5);">
-            <span class="material-symbols-outlined" style="font-size:12px;color:#ca8a04;">workspace_premium</span>
-            <span class="font-label-sm text-label-sm" style="color:#ca8a04;font-size:10px;letter-spacing:0.05em;">CUM LAUDE</span>
-          </div>
+        <div class="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 w-32 h-32 md:w-48 md:h-48 glass-surface rounded-2xl items-center justify-center p-md text-center hidden sm:flex">
+          <p class="font-headline-md text-headline-md dark:text-white">BSIT<br/><span class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Class of 2026</span></p>
         </div>
       </div>
       <div class="section-reveal">
         <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed uppercase tracking-[0.2em] mb-xs block">About Me</span>
         <h2 class="font-headline-lg text-headline-lg mb-md dark:text-white">From idea to deployment — independently.</h2>
-        <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 mb-md">
-          I'm a fresh IT graduate from Universidad de Manila with a background in ICT. I build full-stack web and mobile applications end-to-end, and I've led a team of interns during my time at Ollopa Corporation.
-        </p>
-        <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 mb-lg">
-          My work spans Flask APIs, React Native apps, Firebase integrations, PostgreSQL databases, Chrome extensions, and hands-on networking — all built and shipped without hand-holding. I care about clean code, practical UX, and solutions that actually run in production.
-        </p>
+        <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 mb-md">I'm a fresh IT graduate from Universidad de Manila with a background in ICT. I build full-stack web and mobile applications end-to-end, and I've led a team of interns during my time at Ollopa Corporation.</p>
+        <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 mb-lg">My work spans Flask APIs, React Native apps, Firebase integrations, PostgreSQL databases, Chrome extensions, and hands-on networking — all built and shipped without hand-holding. I care about clean code, practical UX, and solutions that actually run in production.</p>
         <div class="grid grid-cols-2 gap-md">
-          <div>
-            <h4 class="font-headline-md text-headline-md text-primary dark:text-white">5+</h4>
-            <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Projects Built</p>
-          </div>
-          <div>
-            <div class="flex items-center gap-1 mb-xs">
-              <span class="material-symbols-outlined" style="font-size:20px;color:#ca8a04;">workspace_premium</span>
-              <h4 class="font-headline-md text-headline-md" style="color:#ca8a04;">Cum Laude</h4>
-            </div>
-            <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">BSIT · UdM 2026</p>
-          </div>
-          <div>
-            <h4 class="font-headline-md text-headline-md text-primary dark:text-white">Published</h4>
-            <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Google Scholar, 2025</p>
-          </div>
-          <div>
-            <h4 class="font-headline-md text-headline-md text-primary dark:text-white">4</h4>
-            <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Active Side Businesses</p>
-          </div>
+          <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">5+</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Projects Built</p></div>
+          <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">Best in ICT</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">TLE Award, Batch 2020</p></div>
+          <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">Published</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Google Scholar, 2025</p></div>
+          <div><h4 class="font-headline-md text-headline-md text-primary dark:text-white">4</h4><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500 uppercase">Active Side Businesses</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- =========================================
-       TECH STACK
-  ========================================= -->
+  <!-- TECH STACK -->
   <section class="py-xl overflow-hidden" id="stack">
     <div class="max-w-[1200px] mx-auto px-gutter text-center mb-xl section-reveal">
       <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed uppercase tracking-[0.2em] mb-xs block">Tech Stack</span>
@@ -638,52 +671,43 @@
     <div class="flex gap-md w-full relative">
       <div class="flex animate-scroll whitespace-nowrap py-4">
         <div class="flex gap-md px-4">
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">code</span><span class="font-headline-md dark:text-white">Python</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">javascript</span><span class="font-headline-md dark:text-white">JavaScript</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">data_object</span><span class="font-headline-md dark:text-white">TypeScript</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">terminal</span><span class="font-headline-md dark:text-white">Flask</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smartphone</span><span class="font-headline-md dark:text-white">React Native</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">cloud</span><span class="font-headline-md dark:text-white">Firebase</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">storage</span><span class="font-headline-md dark:text-white">PostgreSQL</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">hub</span><span class="font-headline-md dark:text-white">Supabase</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">extension</span><span class="font-headline-md dark:text-white">Chrome Extensions</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smart_toy</span><span class="font-headline-md dark:text-white">Groq API</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">palette</span><span class="font-headline-md dark:text-white">Tailwind CSS</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">commit</span><span class="font-headline-md dark:text-white">Git</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">wifi</span><span class="font-headline-md dark:text-white">Networking</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">code</span><span class="font-headline-md dark:text-white">Python</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">javascript</span><span class="font-headline-md dark:text-white">JavaScript</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">data_object</span><span class="font-headline-md dark:text-white">TypeScript</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">terminal</span><span class="font-headline-md dark:text-white">Flask</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smartphone</span><span class="font-headline-md dark:text-white">React Native</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">cloud</span><span class="font-headline-md dark:text-white">Firebase</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">storage</span><span class="font-headline-md dark:text-white">PostgreSQL</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">hub</span><span class="font-headline-md dark:text-white">Supabase</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">extension</span><span class="font-headline-md dark:text-white">Chrome Extensions</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smart_toy</span><span class="font-headline-md dark:text-white">Groq API</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">palette</span><span class="font-headline-md dark:text-white">Tailwind CSS</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">commit</span><span class="font-headline-md dark:text-white">Git</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">wifi</span><span class="font-headline-md dark:text-white">Networking</span></div>
         </div>
         <div class="flex gap-md px-4" aria-hidden="true">
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">code</span><span class="font-headline-md dark:text-white">Python</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">javascript</span><span class="font-headline-md dark:text-white">JavaScript</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">data_object</span><span class="font-headline-md dark:text-white">TypeScript</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">terminal</span><span class="font-headline-md dark:text-white">Flask</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smartphone</span><span class="font-headline-md dark:text-white">React Native</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">cloud</span><span class="font-headline-md dark:text-white">Firebase</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">storage</span><span class="font-headline-md dark:text-white">PostgreSQL</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">hub</span><span class="font-headline-md dark:text-white">Supabase</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">extension</span><span class="font-headline-md dark:text-white">Chrome Extensions</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smart_toy</span><span class="font-headline-md dark:text-white">Groq API</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">palette</span><span class="font-headline-md dark:text-white">Tailwind CSS</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">commit</span><span class="font-headline-md dark:text-white">Git</span></div>
-          <div class="glass-surface px-8 py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">wifi</span><span class="font-headline-md dark:text-white">Networking</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">code</span><span class="font-headline-md dark:text-white">Python</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">javascript</span><span class="font-headline-md dark:text-white">JavaScript</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">data_object</span><span class="font-headline-md dark:text-white">TypeScript</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">terminal</span><span class="font-headline-md dark:text-white">Flask</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smartphone</span><span class="font-headline-md dark:text-white">React Native</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">cloud</span><span class="font-headline-md dark:text-white">Firebase</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">storage</span><span class="font-headline-md dark:text-white">PostgreSQL</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">hub</span><span class="font-headline-md dark:text-white">Supabase</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">extension</span><span class="font-headline-md dark:text-white">Chrome Extensions</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">smart_toy</span><span class="font-headline-md dark:text-white">Groq API</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">palette</span><span class="font-headline-md dark:text-white">Tailwind CSS</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">commit</span><span class="font-headline-md dark:text-white">Git</span></div>
+          <div class="glass-surface px-5 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center gap-base"><span class="material-symbols-outlined text-primary dark:text-white">wifi</span><span class="font-headline-md dark:text-white">Networking</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- =========================================
-       TESTIMONIALS
-       HOW TO EDIT: see comment block below
-       • Stars     → change count of <span class="star-filled"> icons
-       • Quote     → the <p class="...flex-1"> text
-       • Initials  → 2-letter text in the avatar div
-       • Name      → first <p class="...font-semibold">
-       • Role      → second <p class="...text-gray-500">
-       • Badge     → the last <span> text
-  ========================================= -->
+  <!-- TESTIMONIALS -->
   <section class="py-xl bg-white/10 dark:bg-black/20 backdrop-blur-sm border-y border-white/20 dark:border-white/5" id="testimonials">
     <div class="max-w-[1200px] mx-auto px-gutter">
-      <div class="section-reveal flex flex-col md:flex-row justify-between items-end mb-lg gap-md">
+      <div class="section-reveal flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
         <div>
           <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed uppercase tracking-[0.2em] mb-xs block">Kind Words</span>
           <h2 class="font-headline-lg text-headline-lg dark:text-white">Testimonials</h2>
@@ -691,8 +715,6 @@
         <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 max-w-[360px]">What colleagues, mentors, and clients have said about working with me.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
-
-        <!-- TESTIMONIAL 1 -->
         <div class="section-reveal glass-surface rounded-xl p-md flex flex-col gap-md transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center gap-xs">
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
@@ -701,22 +723,13 @@
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
           </div>
-          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-300 flex-1 leading-relaxed">
-            "Tyrone consistently went beyond what was expected — delivering the gym system on time with features we didn't even ask for. The dashboard alone saved us hours every week."
-          </p>
+          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-300 flex-1 leading-relaxed">"Tyrone consistently went beyond what was expected — delivering the gym system on time with features we didn't even ask for. The dashboard alone saved us hours every week."</p>
           <div class="flex items-center gap-sm pt-sm border-t border-white/20 dark:border-white/10">
-            <div class="w-10 h-10 rounded-full bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0">
-              <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">GY</span>
-            </div>
-            <div class="flex-1">
-              <p class="font-body-md text-body-md font-semibold dark:text-white leading-tight">Gym Owner</p>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Client · Strong Brothers Gym</p>
-            </div>
-            <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider">Client</span>
+            <div class="w-10 h-10 rounded-full bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0"><span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">GY</span></div>
+            <div class="flex-1 min-w-0"><p class="font-body-md text-body-md font-semibold dark:text-white leading-tight">Gym Owner</p><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Client · Strong Brothers Gym</p></div>
+            <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider flex-shrink-0">Client</span>
           </div>
         </div>
-
-        <!-- TESTIMONIAL 2 -->
         <div class="section-reveal glass-surface rounded-xl p-md flex flex-col gap-md transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center gap-xs">
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
@@ -725,22 +738,13 @@
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
           </div>
-          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-300 flex-1 leading-relaxed">
-            "As a fellow intern under Tyrone's leadership, he made sure everyone knew their role and felt supported. He handled documentation, check-ins, and coordination without missing a beat."
-          </p>
+          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-300 flex-1 leading-relaxed">"As a fellow intern under Tyrone's leadership, he made sure everyone knew their role and felt supported. He handled documentation, check-ins, and coordination without missing a beat."</p>
           <div class="flex items-center gap-sm pt-sm border-t border-white/20 dark:border-white/10">
-            <div class="w-10 h-10 rounded-full bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0">
-              <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">IT</span>
-            </div>
-            <div class="flex-1">
-              <p class="font-body-md text-body-md font-semibold dark:text-white leading-tight">Fellow Intern</p>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">OJT · Ollopa Corporation</p>
-            </div>
-            <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider">Colleague</span>
+            <div class="w-10 h-10 rounded-full bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0"><span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">IT</span></div>
+            <div class="flex-1 min-w-0"><p class="font-body-md text-body-md font-semibold dark:text-white leading-tight">Fellow Intern</p><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">OJT · Ollopa Corporation</p></div>
+            <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider flex-shrink-0">Colleague</span>
           </div>
         </div>
-
-        <!-- TESTIMONIAL 3 -->
         <div class="section-reveal glass-surface rounded-xl p-md flex flex-col gap-md transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center gap-xs">
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
@@ -749,124 +753,78 @@
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
             <span class="material-symbols-outlined star-filled text-secondary dark:text-secondary-fixed" style="font-size:18px;">star</span>
           </div>
-          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-300 flex-1 leading-relaxed">
-            "Tyrone led our capstone team with clarity and commitment. He took ownership of the technical architecture, coordinated our tasks well, and got us published on Google Scholar."
-          </p>
+          <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-300 flex-1 leading-relaxed">"Tyrone led our capstone team with clarity and commitment. He took ownership of the technical architecture, coordinated our tasks well, and got us published on Google Scholar."</p>
           <div class="flex items-center gap-sm pt-sm border-t border-white/20 dark:border-white/10">
-            <div class="w-10 h-10 rounded-full bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0">
-              <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">CM</span>
-            </div>
-            <div class="flex-1">
-              <p class="font-body-md text-body-md font-semibold dark:text-white leading-tight">Capstone Member</p>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Vitalis Project · UdM</p>
-            </div>
-            <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider">Groupmate</span>
+            <div class="w-10 h-10 rounded-full bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0"><span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed">CM</span></div>
+            <div class="flex-1 min-w-0"><p class="font-body-md text-body-md font-semibold dark:text-white leading-tight">Capstone Member</p><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">Vitalis Project · UdM</p></div>
+            <span class="px-sm py-1 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed rounded-full text-[10px] font-bold uppercase tracking-wider flex-shrink-0">Groupmate</span>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- =========================================
-       CONTACT — Formspree
-       SETUP: Go to https://formspree.io, create a free
-       account, make a new form, and replace YOUR_FORM_ID
-       below with your actual form ID (e.g. xanqkpab).
-  ========================================= -->
+  <!-- CONTACT -->
   <section class="max-w-[1200px] mx-auto px-gutter py-xl mb-xl" id="contact">
-    <div class="section-reveal glass-surface p-xl rounded-3xl grid grid-cols-1 md:grid-cols-2 gap-xl relative overflow-hidden">
+    <div class="section-reveal glass-surface p-md sm:p-xl rounded-3xl grid grid-cols-1 md:grid-cols-2 gap-xl relative overflow-hidden">
       <div class="z-10">
         <span class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed uppercase tracking-[0.2em] mb-xs block">Get in Touch</span>
         <h2 class="font-headline-lg text-headline-lg mb-md dark:text-white">Open to roles and collaborations.</h2>
         <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 mb-xl">I'm currently available for full-stack development roles, freelance projects, and remote opportunities. Let's build something real.</p>
         <div class="space-y-md">
           <div class="flex items-center gap-md">
-            <div class="w-12 h-12 rounded-full glass-surface flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-primary dark:text-white">mail</span>
-            </div>
-            <div>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Email</p>
-              <a href="mailto:bugstyrone@gmail.com" class="font-body-md text-body-md font-bold dark:text-white hover:text-secondary dark:hover:text-secondary-fixed transition-colors">bugstyrone@gmail.com</a>
-            </div>
+            <div class="w-12 h-12 rounded-full glass-surface flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-primary dark:text-white">mail</span></div>
+            <div class="min-w-0"><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Email</p><a href="mailto:bugstyrone@gmail.com" class="font-body-md text-body-md font-bold dark:text-white hover:text-secondary dark:hover:text-secondary-fixed transition-colors break-all">bugstyrone@gmail.com</a></div>
           </div>
           <div class="flex items-center gap-md">
-            <div class="w-12 h-12 rounded-full glass-surface flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-primary dark:text-white">call</span>
-            </div>
-            <div>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Phone</p>
-              <p class="font-body-md text-body-md font-bold dark:text-white">0953-117-7468</p>
-            </div>
+            <div class="w-12 h-12 rounded-full glass-surface flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-primary dark:text-white">call</span></div>
+            <div><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Phone</p><p class="font-body-md text-body-md font-bold dark:text-white">0953-117-7468</p></div>
           </div>
           <div class="flex items-center gap-md">
-            <div class="w-12 h-12 rounded-full glass-surface flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined text-primary dark:text-white">location_on</span>
-            </div>
-            <div>
-              <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Location</p>
-              <p class="font-body-md text-body-md font-bold dark:text-white">Manila, Philippines</p>
-            </div>
+            <div class="w-12 h-12 rounded-full glass-surface flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-primary dark:text-white">location_on</span></div>
+            <div><p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 uppercase">Location</p><p class="font-body-md text-body-md font-bold dark:text-white">Manila, Philippines</p></div>
           </div>
           <div class="pt-md flex gap-md">
-            <a class="w-10 h-10 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:bg-primary dark:hover:bg-white hover:text-white dark:hover:text-black transition-all" href="https://github.com/tyronepascual6" target="_blank" aria-label="GitHub">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-            </a>
-            <a class="w-10 h-10 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:bg-primary dark:hover:bg-white hover:text-white dark:hover:text-black transition-all" href="https://www.linkedin.com/in/tyrone-pascual-918059298/" target="_blank" aria-label="LinkedIn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            </a>
-            <a class="w-10 h-10 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:bg-primary dark:hover:bg-white hover:text-white dark:hover:text-black transition-all" href="mailto:bugstyrone@gmail.com" aria-label="Email">
-              <span class="material-symbols-outlined" style="font-size:18px;">mail</span>
-            </a>
+            <a class="w-10 h-10 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:bg-primary dark:hover:bg-white hover:text-white dark:hover:text-black transition-all" href="https://github.com/tyronepascual6" target="_blank" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
+            <a class="w-10 h-10 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:bg-primary dark:hover:bg-white hover:text-white dark:hover:text-black transition-all" href="https://www.linkedin.com/in/tyrone-pascual-918059298/" target="_blank" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+            <a class="w-10 h-10 glass-surface rounded-full flex items-center justify-center text-primary dark:text-white hover:bg-primary dark:hover:bg-white hover:text-white dark:hover:text-black transition-all" href="mailto:bugstyrone@gmail.com" aria-label="Email"><span class="material-symbols-outlined" style="font-size:18px;">mail</span></a>
           </div>
         </div>
       </div>
-
-      <!-- Formspree contact form -->
       <div class="z-10">
         <div class="space-y-md">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
             <div class="space-y-xs">
               <label class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400" for="contact-name">NAME</label>
-              <input id="contact-name" class="w-full px-md py-4 rounded-xl bg-white/20 dark:bg-white/5 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all dark:text-white" placeholder="Your name" type="text"/>
+              <input id="contact-name" class="w-full px-md py-4 rounded-xl bg-white/20 dark:bg-white/5 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all dark:text-white text-base" placeholder="Your name" type="text"/>
             </div>
             <div class="space-y-xs">
               <label class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400" for="contact-email">EMAIL</label>
-              <input id="contact-email" class="w-full px-md py-4 rounded-xl bg-white/20 dark:bg-white/5 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all dark:text-white" placeholder="your@email.com" type="email"/>
+              <input id="contact-email" class="w-full px-md py-4 rounded-xl bg-white/20 dark:bg-white/5 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all dark:text-white text-base" placeholder="your@email.com" type="email"/>
             </div>
           </div>
           <div class="space-y-xs">
             <label class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400" for="contact-message">MESSAGE</label>
-            <textarea id="contact-message" class="w-full px-md py-4 rounded-xl bg-white/20 dark:bg-white/5 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all dark:text-white" placeholder="Tell me about the project or opportunity..." rows="5"></textarea>
+            <textarea id="contact-message" class="w-full px-md py-4 rounded-xl bg-white/20 dark:bg-white/5 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all dark:text-white text-base" placeholder="Tell me about the project or opportunity..." rows="5"></textarea>
           </div>
-          <button id="send-btn" class="w-full py-4 bg-primary dark:bg-white text-on-primary dark:text-black rounded-xl font-headline-md text-headline-md transition-all duration-300 hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-            Send Message
-          </button>
-          <!-- Success message -->
-          <div id="send-feedback" class="hidden text-center font-label-sm text-label-sm text-secondary dark:text-secondary-fixed py-sm">
-            Message sent! I'll get back to you soon.
-          </div>
-          <!-- Error message -->
-          <div id="send-error" class="hidden text-center font-label-sm text-label-sm text-red-500 py-sm">
-            Something went wrong. Please email me directly at bugstyrone@gmail.com
-          </div>
+          <button id="send-btn" class="w-full py-4 bg-primary dark:bg-white text-on-primary dark:text-black rounded-xl font-headline-md text-headline-md transition-all duration-300 hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">Send Message</button>
+          <div id="send-feedback" class="hidden text-center font-label-sm text-label-sm text-secondary dark:text-secondary-fixed py-sm">Message sent! I'll get back to you soon.</div>
+          <div id="send-error" class="hidden text-center font-label-sm text-label-sm text-red-500 py-sm">Something went wrong. Please email me directly at bugstyrone@gmail.com</div>
         </div>
       </div>
-
       <div class="absolute -top-20 -right-20 w-64 h-64 bg-secondary-fixed/40 dark:bg-secondary-container/10 blur-[80px] rounded-full pointer-events-none"></div>
     </div>
   </section>
 
 </main>
 
-<!-- Footer -->
 <footer class="w-full py-xl border-t border-outline-variant/30 dark:border-white/5 bg-transparent">
-  <div class="max-w-[1200px] mx-auto px-gutter flex flex-col md:flex-row justify-between items-center gap-md">
+  <div class="max-w-[1200px] mx-auto px-gutter flex flex-col md:flex-row justify-between items-center gap-md text-center md:text-left">
     <div class="flex items-center gap-2">
       <div class="font-headline-md text-headline-md text-primary dark:text-white">TYRONE PASCUAL</div>
       <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
     </div>
-    <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">© 2026 Tyrone C. Pascual · BSIT Graduate, Universidad de Manila</p>
+    <p class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-500">© 2026 Tyrone Pascual · IT Graduate, Full Stack Developer, Universidad de Manila (Cum Laude Honor)</p>
     <div class="flex gap-md">
       <a class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 hover:text-primary dark:hover:text-white underline decoration-primary/30 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="https://github.com/tyronepascual6" target="_blank">GitHub</a>
       <a class="font-label-sm text-label-sm text-on-surface-variant dark:text-gray-400 hover:text-primary dark:hover:text-white underline decoration-primary/30 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="https://www.linkedin.com/in/tyrone-pascual-918059298/" target="_blank">LinkedIn</a>
@@ -880,35 +838,36 @@
   const themeToggle = document.getElementById('theme-toggle');
   const themeToggleIcon = document.getElementById('theme-toggle-icon');
   const html = document.documentElement;
-
   themeToggle.addEventListener('click', () => {
     html.classList.toggle('dark');
     const isDark = html.classList.contains('dark');
     themeToggleIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
-
   if (localStorage.getItem('theme') === 'dark') {
     html.classList.add('dark');
     themeToggleIcon.textContent = 'light_mode';
   }
 
-  // ── Custom Cursor ─────────────────────────────────
+  // ── Custom Cursor (desktop / mouse only) ──────────
+  const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
   const cursor = document.getElementById('cursor');
-  document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX - 20 + 'px';
-    cursor.style.top = e.clientY - 20 + 'px';
-  });
-  document.querySelectorAll('a, button, input, textarea, .group, .glass-surface').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.transform = 'scale(1.5)';
-      cursor.style.backgroundColor = html.classList.contains('dark') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  if (!isTouchDevice) {
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX - 20 + 'px';
+      cursor.style.top = e.clientY - 20 + 'px';
     });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.transform = 'scale(1)';
-      cursor.style.backgroundColor = 'transparent';
+    document.querySelectorAll('a, button, input, textarea, .group, .glass-surface').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'scale(1.5)';
+        cursor.style.backgroundColor = html.classList.contains('dark') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'scale(1)';
+        cursor.style.backgroundColor = 'transparent';
+      });
     });
-  });
+  }
 
   // ── Scroll Reveal ─────────────────────────────────
   const revealObserver = new IntersectionObserver((entries) => {
@@ -926,62 +885,128 @@
   const mobileMenuIcon = document.getElementById('mobile-menu-icon');
   const mobileMenu = document.getElementById('mobile-menu');
   let menuOpen = false;
-
   mobileMenuBtn.addEventListener('click', () => {
     menuOpen = !menuOpen;
     if (menuOpen) {
       mobileMenu.classList.remove('menu-hidden');
       mobileMenu.classList.add('menu-visible');
       mobileMenuIcon.textContent = 'close';
-    } else {
-      closeMobileMenu();
-    }
+      document.body.style.overflow = 'hidden';
+    } else { closeMobileMenu(); }
   });
-
   function closeMobileMenu() {
     menuOpen = false;
     mobileMenu.classList.remove('menu-visible');
     mobileMenu.classList.add('menu-hidden');
     mobileMenuIcon.textContent = 'menu';
+    document.body.style.overflow = '';
   }
-
-  // Close mobile menu when clicking outside
   document.addEventListener('click', (e) => {
-    if (menuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-      closeMobileMenu();
+    if (menuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) closeMobileMenu();
+  });
+
+  // ── Screenshot Hover / Tap Slideshow ──────────────
+  //
+  // THREE LAYERS PER CARD:
+  //
+  //  .screenshot-default  (z-index: 1)
+  //    → A real photo, always visible at rest (opacity: 1 in CSS).
+  //    → src is hardcoded in HTML to the first screenshot.
+  //    → Fades OUT (opacity → 0) when the mouse enters (or on tap, on touch devices).
+  //    → Fades back IN (opacity → 1) when the mouse leaves.
+  //
+  //  .screenshot-img × 2  (z-index: 2)
+  //    → Two invisible layers stacked on top of .screenshot-default.
+  //    → JS alternates between them for flicker-free crossfade.
+  //    → Fade IN on hover, fade OUT on leave.
+  //
+  //  .screenshot-dots
+  //    → Dot indicators built dynamically from data-screenshots count.
+  //    → Shown only on hover via CSS (.screenshot-wrapper:hover), always visible on touch.
+  //
+  document.querySelectorAll('.screenshot-wrapper').forEach(wrapper => {
+    let screenshots;
+    try { screenshots = JSON.parse(wrapper.dataset.screenshots); }
+    catch (e) { return; }
+    if (!screenshots || screenshots.length === 0) return;
+
+    const defaultImg = wrapper.querySelector('.screenshot-default'); // the resting photo
+    const imgs       = wrapper.querySelectorAll('.screenshot-img'); // [layer0, layer1]
+    const dotsEl     = wrapper.querySelector('.screenshot-dots');
+
+    let currentIndex = 0;
+    let activeLayer  = 0;
+    let intervalId   = null;
+
+    // Build dot indicators (one per screenshot)
+    screenshots.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'screenshot-dot' + (i === 0 ? ' active' : '');
+      dotsEl.appendChild(dot);
+    });
+
+    function updateDots(index) {
+      dotsEl.querySelectorAll('.screenshot-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
     }
+
+    // Preload all images for smooth transitions
+    screenshots.forEach(src => { const p = new Image(); p.src = src; });
+
+    // Crossfade to a specific screenshot index
+    function showScreenshot(index) {
+      const nextLayer = 1 - activeLayer;
+      imgs[nextLayer].src = screenshots[index];
+      imgs[nextLayer].style.opacity = '1'; // fade in
+      imgs[activeLayer].style.opacity = '0'; // fade out
+      activeLayer = nextLayer;
+      currentIndex = index;
+      updateDots(index);
+    }
+
+    function startSlideshow() {
+      defaultImg.style.opacity = '0'; // hide the resting photo
+      showScreenshot(0);              // show first screenshot immediately
+      if (screenshots.length <= 1) return;
+      intervalId = setInterval(() => {
+        showScreenshot((currentIndex + 1) % screenshots.length);
+      }, 1400); // cycle every 1.4 seconds — change this to taste
+    }
+
+    function stopSlideshow() {
+      clearInterval(intervalId);
+      intervalId = null;
+      imgs.forEach(img => { img.style.opacity = '0'; }); // hide slideshow layers
+      defaultImg.style.opacity = '1'; // bring back the resting photo
+      updateDots(0);
+    }
+
+    // MOUSE ENTER/LEAVE → desktop hover behavior
+    wrapper.addEventListener('mouseenter', startSlideshow);
+    wrapper.addEventListener('mouseleave', stopSlideshow);
   });
 
   // ── Formspree Contact Form ────────────────────────
-  // SETUP: Replace YOUR_FORM_ID with your Formspree form ID.
-  // 1. Sign up at https://formspree.io (free plan allows 50 submissions/month)
-  // 2. Click "New Form", give it a name, set email to bugstyrone@gmail.com
-  // 3. Copy the form ID from the endpoint URL (e.g. xanqkpab)
-  // 4. Paste it below replacing YOUR_FORM_ID
-  const FORMSPREE_ID = 'YOUR_FORM_ID';
-
+  const FORMSPREE_ID = 'xdavqkze';
   document.getElementById('send-btn').addEventListener('click', async () => {
-    const name = document.getElementById('contact-name').value.trim();
-    const email = document.getElementById('contact-email').value.trim();
+    const name    = document.getElementById('contact-name').value.trim();
+    const email   = document.getElementById('contact-email').value.trim();
     const message = document.getElementById('contact-message').value.trim();
-    const btn = document.getElementById('send-btn');
+    const btn      = document.getElementById('send-btn');
     const feedback = document.getElementById('send-feedback');
     const errorMsg = document.getElementById('send-error');
-
     if (!name || !email || !message) return;
-
     btn.textContent = 'Sending...';
     btn.disabled = true;
     feedback.classList.add('hidden');
     errorMsg.classList.add('hidden');
-
     try {
       const res = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ name, email, message })
       });
-
       if (res.ok) {
         document.getElementById('contact-name').value = '';
         document.getElementById('contact-email').value = '';
