@@ -91,7 +91,7 @@ const PROJECTS = [
     },
     {
       id: "gym",
-      title: "Rico Gym",
+      title: "Rico & Strong Brothers Gym",
       subtitle: "Full-Stack Gym Management System",
       icon: "fitness_center",
       badges: [],
